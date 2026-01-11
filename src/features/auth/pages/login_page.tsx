@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 // Components
 import { Input } from '../../../components/ui/input';
 import { Button } from '../../../components/ui/button';
-import { Mail, Lock, ArrowLeft } from 'lucide-react'; // ArrowLeft points "Forward" in RTL
+import { Mail, Lock } from 'lucide-react'; // ArrowLeft points "Forward" in RTL
 import { loginSchema, type LoginFormValues } from '../schema/login_schema';
 import { useAdminLogin } from '../hooks/use-auth';
 

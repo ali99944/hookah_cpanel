@@ -4,16 +4,33 @@ import { ArrowRight } from 'lucide-react';
 import { ProductForm } from '../components/product_form';
 import { Button } from '../../../components/ui/button';
 import { useProduct, useUpdateProduct } from '../hooks/use-products';
+import type { ProductFormValues } from '../schema/product_schema';
+import { useNotification } from '../../../core/hooks/use-notification';
 
 export const EditProductPage: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   
   const { data: product, isLoading: isFetching } = useProduct(id);
+  const { notify } = useNotification()
   
-  const { mutate, isPending: isSaving } = useUpdateProduct(Number(id), () => {
+  const { mutateAsync: update_product, isPending: isSaving } = useUpdateProduct(Number(id), () => {
     navigate('/products');
   });
+
+  const handleSubmit = async (data: ProductFormValues) => {
+    await update_product(data, {
+      onSuccess: () => {
+        navigate('/products');
+        notify.success('تم تحديث المنتج بنجاح')
+      },
+
+      onError(error) {
+        console.error("Update Failed:", error)
+        notify.error(error.response.data.error.message)
+      },
+    });
+  }
 
   if (isFetching) return <div>جاري التحميل...</div>;
   if (!product) return <div>المنتج غير موجود</div>;
@@ -32,7 +49,7 @@ export const EditProductPage: React.FC = () => {
 
       <ProductForm 
         defaultValues={product} 
-        onSubmit={mutate} 
+        onSubmit={handleSubmit} 
         isLoading={isSaving} 
       />
     </div>

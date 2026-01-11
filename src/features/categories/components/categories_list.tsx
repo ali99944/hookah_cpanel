@@ -7,6 +7,7 @@ import type { ColumnDef } from '../../../components/ui/datatable';
 import { useDeleteCategory, useUpdateCategory } from '../hooks/use-categories';
 import { TableAction, TableActions } from '../../../components/ui/table-actions';
 import DataTable from '../../../components/ui/datatable';
+import type { CategoryFormValues } from '../schema/category_schema';
 
 interface CategoriesListProps {
   data: Category[];
@@ -61,7 +62,7 @@ export const CategoriesList: React.FC<CategoriesListProps> = ({ data, isLoading 
     },
     { 
       header: 'عدد المنتجات',
-      cell: (item) => <span className="text-xs font-mono">
+      cell: () => <span className="text-xs font-mono">
         0
       </span> // Placeholder if no count from API
     },
@@ -121,12 +122,17 @@ export const CategoriesList: React.FC<CategoriesListProps> = ({ data, isLoading 
 
 // Update Wrapper
 const UpdateCategoryDialog = ({ category, onClose }: { category: Category; onClose: () => void }) => {
-  const { mutate, isPending } = useUpdateCategory(category.id, onClose);
+  const { mutateAsync: update_category, isPending } = useUpdateCategory(category.id, onClose);
+  
+  const handleSubmit = async (data: CategoryFormValues) => {
+    await update_category(data);
+  };
+  
   return (
     <Dialog isOpen={true} onClose={onClose} title="تعديل القسم">
       <CategoryForm 
         defaultValues={category}
-        onSubmit={mutate}
+        onSubmit={handleSubmit}
         isLoading={isPending}
         onCancel={onClose}
       />

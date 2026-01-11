@@ -1,7 +1,5 @@
 // src/features/dashboard/pages/dashboard_page.tsx
 import React from 'react';
-import { LogOutIcon } from 'lucide-react';
-import { Button } from '../../../components/ui/button';
 import { DashboardStats } from '../components/dashboard_stats';
 import { RecentOrders } from '../components/recent_orders';
 import { useDashboardMetrics } from '../hooks/use-dashboard';

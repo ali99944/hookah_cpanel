@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { PanelLeft, ChevronRight, PanelLeftOpen, PanelRightOpen, LogOutIcon } from 'lucide-react';
+import { ChevronRight, PanelLeftOpen, PanelRightOpen, LogOutIcon } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { useLayoutStore } from '../../core/hooks/use-layout';
 import { Button } from '../ui/button';

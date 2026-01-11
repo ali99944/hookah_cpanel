@@ -4,7 +4,7 @@ import React, { useState, useEffect, useEffectEvent } from 'react';
 import { motion } from 'framer-motion';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import type { NavGroup } from '../../types/navigation';
-import { User, Settings, LogOut, ChevronsUpDown } from 'lucide-react';
+import { Settings, LogOut, ChevronsUpDown } from 'lucide-react';
 import { Dropdown } from '../ui/dropdown';
 import { useLogout, useValidateSession } from '../../features/auth/hooks/use-auth';
 import { useLayoutStore } from '../../core/hooks/use-layout';

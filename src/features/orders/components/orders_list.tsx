@@ -5,6 +5,7 @@ import { OrderStatusBadge } from './order_status_badge';
 import { type Order } from '../types';
 import DataTable, { type ColumnDef } from '../../../components/ui/datatable';
 import { TableAction, TableActions } from '../../../components/ui/table-actions';
+import { DeleteOrderDialog } from './delete_order_dialog';
 
 interface OrdersListProps {
   data: Order[];

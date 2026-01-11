@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
 import { productSchema, type ProductFormValues } from '../schema/product_schema';
@@ -17,7 +17,7 @@ import { MultiImagePicker } from '../../../components/ui/multi-image-picker';
 
 interface ProductFormProps {
   defaultValues?: Product;
-  onSubmit: (data: ProductFormValues) => void;
+  onSubmit: SubmitHandler<ProductFormValues>;
   isLoading: boolean;
 }
 
@@ -36,7 +36,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     watch,
     setValue,
     formState: { errors } 
-  } = useForm<ProductFormValues>({
+  } = useForm({
     resolver: zodResolver(productSchema),
     defaultValues: {
       category_id: defaultValues?.category_id || undefined,
@@ -58,7 +58,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   const nameValue = watch('name');
   useEffect(() => {
     if (!defaultValues && nameValue) {
-      const slug = nameValue.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+      const slug = (nameValue as string).toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
       setValue('slug', slug);
     }
   }, [nameValue, setValue, defaultValues]);

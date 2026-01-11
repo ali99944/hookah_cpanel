@@ -1,26 +1,24 @@
 import { z } from 'zod';
 
 // Helper for file or string (existing url)
-const fileOrString = z.union([
-  z.instanceof(File),
-  z.string()
-]).optional();
+// const fileOrString = z.union([
+//   z.instanceof(File),
+//   z.string()
+// ]).optional();
 
 export const productSchema = z.object({
-  category_id: z.coerce.number().min(1, "يجب اختيار القسم"),
-  name: z.string().min(3, "اسم المنتج مطلوب"),
-  slug: z.string().min(3, "الرابط الدائم مطلوب"),
-  description: z.string().optional(),
+  category_id: z.coerce.number().min(1, "يجب اختيار القسم").optional(),
+  name: z.coerce.string().min(3, "اسم المنتج مطلوب").optional(),
+  slug: z.coerce.string().min(3, "الرابط الدائم مطلوب").optional(),
+  description: z.coerce.string().optional(),
   
-  price: z.coerce.number().min(0, "السعر لا يمكن أن يكون سالب"),
-  stock: z.coerce.number().int().min(0, "المخزون لا يمكن أن يكون سالب"),
+  price: z.coerce.number().min(0, "السعر لا يمكن أن يكون سالب").optional(),
+  stock: z.coerce.number().int().min(0, "المخزون لا يمكن أن يكون سالب").optional(),
   
-  status: z.enum(['active', 'inactive', 'draft']),
+  status: z.enum(['active', 'inactive', 'draft']).optional(),
   
   // Cover: Required on create (File), optional on update if string exists
-  cover_image: z.any().refine((val) => val instanceof File || typeof val === 'string', {
-    message: "صورة الغلاف مطلوبة"
-  }),
+  cover_image: z.union([z.string(), z.instanceof(File)]).optional(),
 
   // Gallery: Array of Files (new) or Strings (existing)
   gallery: z.array(z.any()).optional(),

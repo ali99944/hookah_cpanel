@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useRef, useEffect, useState } from 'react';
-import { Plus, X, Image as ImageIcon } from 'lucide-react';
+import React, { useRef, useEffect, useState, useEffectEvent } from 'react';
+import { Plus, X } from 'lucide-react';
 
 interface MultiImagePickerProps {
   label?: string;
@@ -89,12 +89,15 @@ export const MultiImagePicker: React.FC<MultiImagePickerProps> = ({
 const ImageSlot = ({ item, onRemove }: { item: File | string, onRemove: () => void }) => {
   const [preview, setPreview] = useState<string>('');
 
+  const setPreviewEvent = useEffectEvent(setPreview);
+  
+
   useEffect(() => {
     if (typeof item === 'string') {
-      setPreview(item);
+      setPreviewEvent(item);
     } else {
       const url = URL.createObjectURL(item);
-      setPreview(url);
+      setPreviewEvent(url);
       return () => URL.revokeObjectURL(url);
     }
   }, [item]);

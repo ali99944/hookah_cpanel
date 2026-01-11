@@ -5,7 +5,7 @@ import { useOrders } from '../hooks/use-orders';
 // Add filters component here if needed, keeping it simple for now
 
 export const OrdersPage: React.FC = () => {
-  const [filters, setFilters] = useState<OrderFilters>({});
+  const [filters] = useState<OrderFilters>({});
   const { data, isLoading } = useOrders(filters);
 
   return (

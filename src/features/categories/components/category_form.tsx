@@ -1,5 +1,5 @@
 import React from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { categorySchema, type CategoryFormValues } from '../schema/category_schema';
 import { type Category } from '../types';
@@ -13,7 +13,7 @@ import { ImagePicker } from '../../../components/ui/image-picker'; // Imported
 
 interface CategoryFormProps {
   defaultValues?: Category;
-  onSubmit: (data: CategoryFormValues) => void;
+  onSubmit: SubmitHandler<CategoryFormValues>;
   isLoading: boolean;
   onCancel: () => void;
 }

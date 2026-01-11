@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useRef, useState, useEffect } from 'react';
-import { UploadCloud, X, Image as ImageIcon } from 'lucide-react';
+import React, { useRef, useState, useEffect, useEffectEvent } from 'react';
+import { UploadCloud, X } from 'lucide-react';
 import { Button } from './button';
 
 interface ImagePickerProps {
@@ -22,18 +22,20 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
+  const setPreviewEvent = useEffectEvent(setPreview);
+
   // Handle Preview Generation
   useEffect(() => {
     if (!value) {
-      setPreview(null);
+      setPreviewEvent(null);
       return;
     }
 
     if (typeof value === 'string') {
-      setPreview(value);
+      setPreviewEvent(value);
     } else if (value instanceof File) {
       const objectUrl = URL.createObjectURL(value);
-      setPreview(objectUrl);
+      setPreviewEvent(objectUrl);
       return () => URL.revokeObjectURL(objectUrl);
     }
   }, [value]);
@@ -87,7 +89,7 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
             {/* Overlay for Remove Action */}
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-10">
               <Button
-                variant="destructive"
+                variant="danger"
                 size="sm"
                 onClick={handleRemove}
                 leftIcon={<X size={14} />}

@@ -4,12 +4,17 @@ import { ArrowRight } from 'lucide-react'; // ArrowRight is "Back" in RTL
 import { ProductForm } from '../components/product_form';
 import { Button } from '../../../components/ui/button';
 import { useCreateProduct } from '../hooks/use-products';
+import type { ProductFormValues } from '../schema/product_schema';
 
 export const CreateProductPage: React.FC = () => {
   const navigate = useNavigate();
-  const { mutate, isPending } = useCreateProduct(() => {
+  const { mutateAsync: create_product, isPending } = useCreateProduct(() => {
     navigate('/products');
   });
+
+  const handleSubmit = async (data: ProductFormValues) => {
+    await create_product(data);
+  };
 
   return (
     <div className="space-y-6 pb-10" dir="rtl">
@@ -23,7 +28,7 @@ export const CreateProductPage: React.FC = () => {
         </div>
       </div>
 
-      <ProductForm onSubmit={mutate} isLoading={isPending} />
+      <ProductForm onSubmit={handleSubmit} isLoading={isPending} />
     </div>
   );
 };

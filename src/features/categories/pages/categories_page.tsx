@@ -5,14 +5,19 @@ import { CategoryForm } from '../components/category_form';
 import { Button } from '../../../components/ui/button';
 import { Dialog } from '../../../components/ui/dialog';
 import { useCategories, useCreateCategory } from '../hooks/use-categories';
+import type { CategoryFormValues } from '../schema/category_schema';
 
 export const CategoriesPage: React.FC = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   
   const { data: categories, isLoading } = useCategories();
-  const { mutate: createCategory, isPending } = useCreateCategory(() => {
+  const { mutateAsync: createCategory, isPending } = useCreateCategory(() => {
     setIsCreateOpen(false);
   });
+
+  const handleSubmit = async (data: CategoryFormValues) => {
+    await createCategory(data);
+  };
 
   return (
     <div className="space-y-6 pb-20" dir="rtl">
@@ -45,7 +50,7 @@ export const CategoriesPage: React.FC = () => {
         title="إضافة قسم جديد"
       >
         <CategoryForm 
-          onSubmit={createCategory}
+          onSubmit={handleSubmit}
           isLoading={isPending}
           onCancel={() => setIsCreateOpen(false)}
         />

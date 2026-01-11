@@ -1,0 +1,134 @@
+@import "tailwindcss";
+/* @plugin "@tailwindcss/typography"; */
+
+/* @import "swiper/css"; */
+/* @import "swiper/css/navigation"; */
+
+@font-face {
+  font-family: 'jazeera';
+  src: url('/fonts/jazeera.ttf') format('truetype');
+}
+
+
+
+:root {
+  --primary: #4f39f6;
+  /* --primary: #8338ec; */
+  --primary-foreground: #fff;
+  --secondary: #353535;
+  --secondary-foreground: #fff;
+  --accent: #f2e8cf;
+  --accent-foreground: #000;
+
+  --text-muted: #6b7280;
+  --text-primary: #2e2d2d;
+
+  --card: #eee;
+  --background: #f9f9f9;
+
+  --border: #e0e0e1;
+
+  /* semantic colors */
+  --destructive: #bc4749;
+  --success: #006045;
+  --warning: #fca311;
+}
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-text-muted: var(--text-muted);
+  --color-text-primary: var(--text-primary);
+
+  --color-card: var(--card);
+  --color-background: var(--background);
+
+  --color-border: var(--border);
+
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+}
+
+body, * {
+  font-family: 'jazeera', sans-serif;
+}
+@layer utilities {
+  /* --- 1. Webkit Browsers (Chrome, Edge, Safari) --- */
+  
+  /* Width */
+  ::-webkit-scrollbar {
+    width: 8px;  /* Vertical scrollbar width */
+    height: 8px; /* Horizontal scrollbar height */
+  }
+
+  /* Track (Background) */
+  ::-webkit-scrollbar-track {
+    background: transparent; /* Keep it clean */
+  }
+
+  /* Handle (The moving part) */
+  ::-webkit-scrollbar-thumb {
+    background-color: #d1d5db; /* A neutral gray (matches tailwind gray-300) */
+    border-radius: 0px; /* SQUARED: Strict adherence to your design system */
+    
+    /* Optional: This creates a padding effect so the scrollbar looks floating */
+    border: 2px solid transparent; 
+    background-clip: content-box; 
+  }
+
+  /* Handle on Hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--secondary); /* Uses your #353535 variable */
+    border: 0px solid transparent; /* Fill the space on hover for better grip */
+  }
+
+  /* Handle on Active (Clicking) */
+  ::-webkit-scrollbar-thumb:active {
+    background-color: var(--primary); /* Uses your #ee6c4d variable */
+  }
+
+  /* --- 2. Firefox --- */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #d1d5db transparent;
+  }
+}
+
+/* --- 3. Utility Class to Hide Scrollbar (For horizontal tabs) --- */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Custom Quill Override for Squared Design */
+.nobel-editor .ql-toolbar.ql-snow {
+  border: 1px solid var(--color-border);
+  border-bottom: none;
+  background-color: var(--color-background); /* #f9f9f9 */
+  border-radius: 0;
+}
+
+.nobel-editor .ql-container.ql-snow {
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  background-color: #fff;
+  font-family: 'Cairo', sans-serif;
+  min-height: 300px;
+}
+
+.nobel-editor .ql-editor {
+  direction: rtl;
+  text-align: right;
+  font-size: 16px;
+  line-height: 1.8;
+}

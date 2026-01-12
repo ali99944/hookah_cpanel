@@ -7,6 +7,7 @@ import { useDeleteProduct } from '../hooks/use-products';
 import type { ColumnDef } from '../../../components/ui/datatable';
 import { TableAction, TableActions } from '../../../components/ui/table-actions';
 import DataTable from '../../../components/ui/datatable';
+import { getStorageLink } from '../../../core/lib/storage';
 
 interface ProductsListProps {
   data: Product[];
@@ -22,9 +23,9 @@ export const ProductsList: React.FC<ProductsListProps> = ({ data, isLoading }) =
     { 
       header: 'صورة', 
       cell: (item) => (
-        <div className="w-10 h-10 bg-white border border-border p-0.5">
+        <div className="w-12 h-12 bg-white border border-border p-0.5">
           <img 
-            src={item.cover_image} 
+            src={getStorageLink(item.cover_image) as string} 
             alt={item.name} 
             className="w-full h-full object-cover" 
             onError={(e) => (e.currentTarget.src = 'https://via.placeholder.com/40')}

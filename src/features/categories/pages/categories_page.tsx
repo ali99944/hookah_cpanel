@@ -4,14 +4,17 @@ import { CategoriesList } from '../components/categories_list';
 import { CategoryForm } from '../components/category_form';
 import { Button } from '../../../components/ui/button';
 import { Dialog } from '../../../components/ui/dialog';
-import { useCategories, useCreateCategory } from '../hooks/use-categories';
+import { useCollections, useCreateCategory } from '../hooks/use-categories';
 import type { CategoryFormValues } from '../schema/category_schema';
+import { useNotification } from '../../../core/hooks/use-notification';
 
 export const CategoriesPage: React.FC = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  
-  const { data: categories, isLoading } = useCategories();
+  const { notify } = useNotification();
+  const { data: categories, isLoading } = useCollections();
+
   const { mutateAsync: createCategory, isPending } = useCreateCategory(() => {
+    notify.success('تم انشاء المجموعة بنجاح');
     setIsCreateOpen(false);
   });
 

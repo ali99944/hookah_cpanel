@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { useFieldArray, type Control, type UseFormRegister } from 'react-hook-form';
 import { Plus, Trash2 } from 'lucide-react';

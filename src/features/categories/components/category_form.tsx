@@ -6,10 +6,10 @@ import { type Category } from '../types';
 
 // Components
 import { Input } from '../../../components/ui/input';
-import { TextArea } from '../../../components/ui/textarea';
 import { Button } from '../../../components/ui/button';
 import { Switch } from '../../../components/ui/switch';
 import { ImagePicker } from '../../../components/ui/image-picker'; // Imported
+import { SlugInput } from '../../../components/ui/slug-input';
 
 interface CategoryFormProps {
   defaultValues?: Category;
@@ -27,15 +27,16 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
   const { 
     register, 
     handleSubmit, 
+    watch,
     control, // Needed for Controller
     formState: { errors } 
   } = useForm<CategoryFormValues>({
     resolver: zodResolver(categorySchema),
     defaultValues: {
       name: defaultValues?.name || '',
-      description: defaultValues?.description || '',
       is_active: defaultValues?.is_active ?? true,
       image: defaultValues?.image || undefined,
+      slug: defaultValues?.slug || '',
     },
   });
 
@@ -65,11 +66,19 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
           {...register('name')}
         />
 
-        <TextArea
-          label="الوصف"
-          placeholder="وصف مختصر للقسم..."
-          error={errors.description?.message}
-          {...register('description')}
+        <Controller
+          control={control}
+          name="slug"
+          render={({ field }) => (
+            <SlugInput 
+              label="رابط القسم"
+              value={field.value}
+              onChange={field.onChange}
+              sourceValue={watch('name')}
+              baseUrl="shishanobel.com/collections/"
+              error={errors.slug?.message} // Ensure you add slug to category schema if needed
+            />
+          )}
         />
 
         <Controller

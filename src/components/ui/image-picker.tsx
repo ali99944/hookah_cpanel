@@ -3,6 +3,7 @@
 import React, { useRef, useState, useEffect, useEffectEvent } from 'react';
 import { UploadCloud, X } from 'lucide-react';
 import { Button } from './button';
+import { getStorageLink } from '../../core/lib/storage';
 
 interface ImagePickerProps {
   label?: string;
@@ -32,7 +33,7 @@ export const ImagePicker: React.FC<ImagePickerProps> = ({
     }
 
     if (typeof value === 'string') {
-      setPreviewEvent(value);
+      setPreviewEvent(getStorageLink(value));
     } else if (value instanceof File) {
       const objectUrl = URL.createObjectURL(value);
       setPreviewEvent(objectUrl);

@@ -5,10 +5,14 @@ import { ProductForm } from '../components/product_form';
 import { Button } from '../../../components/ui/button';
 import { useCreateProduct } from '../hooks/use-products';
 import type { ProductFormValues } from '../schema/product_schema';
+import { useNotification } from '../../../core/hooks/use-notification';
 
 export const CreateProductPage: React.FC = () => {
   const navigate = useNavigate();
+  const { notify } = useNotification()
+
   const { mutateAsync: create_product, isPending } = useCreateProduct(() => {
+    notify.success('تم انشاء المنتج بنجاح')
     navigate('/products');
   });
 

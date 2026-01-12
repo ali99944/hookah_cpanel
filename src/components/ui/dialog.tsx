@@ -18,6 +18,8 @@ interface ActionDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  closeText?: string;
+  confirmText?: string;
   title: string;
   description: string;
   isLoading?: boolean;
@@ -113,7 +115,7 @@ export function ConfirmDialog({ isOpen, onClose, onConfirm, title, description, 
 }
 
 // --- 3. DANGER DIALOG (Destructive Actions) ---
-export function DangerDialog({ isOpen, onClose, onConfirm, title, description, isLoading }: ActionDialogProps) {
+export function DangerDialog({ isOpen, onClose, onConfirm, closeText, confirmText, title, description, isLoading }: ActionDialogProps) {
   return (
     <Dialog isOpen={isOpen} onClose={onClose} title={title}>
       <div className="flex flex-col gap-4">
@@ -133,14 +135,14 @@ export function DangerDialog({ isOpen, onClose, onConfirm, title, description, i
             variant='ghost'
             
           >
-            Cancel
+            {closeText || 'الغاء'}
           </Button>
           <Button 
             onClick={onConfirm}
             disabled={isLoading}
             variant='danger'
           >
-            {isLoading ? 'Deleting...' : 'Delete Immediately'}
+            {confirmText || 'موافق'}
           </Button>
         </div>
       </div>

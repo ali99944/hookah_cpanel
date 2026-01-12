@@ -84,7 +84,8 @@ export const useCreateProduct = (onSuccess?: () => void) => {
 export const useUpdateProduct = (id: number, onSuccess?: () => void) => {
 
   return useMutationAction({
-    url: `/products/${id}`,
+    url: `/products/${id}?_method=PUT`,
+    key: ['products', 'create', id],
     method: 'post',
     contentType: 'multipart/form-data',
     onSuccessCallback: () => {

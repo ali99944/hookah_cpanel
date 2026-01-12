@@ -9,8 +9,8 @@ const imageSchema = z.union([
 
 export const categorySchema = z.object({
   name: z.string().min(2, "اسم القسم يجب أن يكون حرفين على الأقل"),
-  description: z.string().min(10, "الوصف يجب أن يكون 10 أحرف على الأقل"),
   is_active: z.boolean(),
+  slug: z.string().min(2, "الرابط الدائم يجب ان يكون حرفين على الأقل"),
   image: imageSchema.optional(), // Optional on edit, but usually required on create in UI logic
 });
 

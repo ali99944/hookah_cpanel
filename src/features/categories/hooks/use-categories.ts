@@ -1,14 +1,15 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type Category } from '../types';
 import { type CategoryFormValues } from '../schema/category_schema';
-import { useGetQuery } from '../../../core/hooks/queries-actions';
+import { useGetQuery, type ApiError } from '../../../core/hooks/queries-actions';
 import { useAxios } from '../../../core/lib/axios';
+import { useNotification } from '../../../core/hooks/use-notification';
 
 // Helper to convert object to FormData
 const toFormData = (data: CategoryFormValues): FormData => {
   const formData = new FormData();
   formData.append('name', data.name);
-  formData.append('description', data.description);
+  formData.append('slug', data.slug);
   formData.append('is_active', data.is_active ? '1' : '0');
   
   // Only append image if it's a File (new upload)
@@ -19,10 +20,10 @@ const toFormData = (data: CategoryFormValues): FormData => {
 };
 
 // --- GET CATEGORIES ---
-export const useCategories = () => {
+export const useCollections = () => {
   return useGetQuery<Category[]>({
-    key: ['categories'],
-    url: '/categories',
+    key: ['collections'],
+    url: '/collections',
   });
 };
 
@@ -34,13 +35,13 @@ export const useCreateCategory = (onSuccess?: () => void) => {
   // We use raw useMutation here to handle FormData transformation easily
   return useMutation({
     mutationFn: async (data: CategoryFormValues) => {
-      const response = await axios.post('/categories', toFormData(data), {
+      const response = await axios.post('/collections', toFormData(data), {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
+      queryClient.invalidateQueries({ queryKey: ['collections'] });
       if (onSuccess) onSuccess();
     }
   });
@@ -58,13 +59,13 @@ export const useUpdateCategory = (id: number, onSuccess?: () => void) => {
       const formData = toFormData(data);
       formData.append('_method', 'PUT'); 
       
-      const response = await axios.post(`/categories/${id}`, formData, {
+      const response = await axios.post(`/collections/${id}`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
+      queryClient.invalidateQueries({ queryKey: ['collections'] });
       if (onSuccess) onSuccess();
     }
   });
@@ -74,14 +75,20 @@ export const useUpdateCategory = (id: number, onSuccess?: () => void) => {
 export const useDeleteCategory = (onSuccess?: () => void) => {
   const axios = useAxios();
   const queryClient = useQueryClient();
+  const { notify } = useNotification()
 
   return useMutation({
     mutationFn: async (id: number) => {
-      await axios.delete(`/categories/${id}`);
+      await axios.delete(`/collections/${id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
+      queryClient.invalidateQueries({ queryKey: ['collections'] });
+      notify.success('تم حذف المجموعة')
       if (onSuccess) onSuccess();
-    }
+    },
+
+    onError: (error) => {
+      notify.error((error as unknown as ApiError).response.data.error.message)
+    },
   });
 };

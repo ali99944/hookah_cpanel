@@ -11,7 +11,7 @@ import { TextArea } from '../../../components/ui/textarea';
 import { Button } from '../../../components/ui/button';
 import { Select } from '../../../components/ui/select';
 import { KeyValueRepeater } from './key_value_repeater';
-import { useCategories } from '../../categories/hooks/use-categories';
+import { useCollections } from '../../categories/hooks/use-categories';
 import { ImagePicker } from '../../../components/ui/image-picker';
 import { MultiImagePicker } from '../../../components/ui/multi-image-picker';
 
@@ -27,7 +27,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   isLoading 
 }) => {
   const navigate = useNavigate();
-  const { data: categories } = useCategories();
+  const { data: collections } = useCollections();
 
   const { 
     register, 
@@ -45,7 +45,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       description: defaultValues?.description || '',
       price: Number(defaultValues?.price) || 0,
       stock: defaultValues?.stock || 0,
-      status: defaultValues?.status || 'draft',
+      status: defaultValues?.status || 'active',
       cover_image: defaultValues?.cover_image || undefined,
       // Map existing gallery to array of strings (URLs)
       gallery: defaultValues?.gallery_images?.map(g => g.url) || [],
@@ -145,7 +145,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                   label="القسم"
                   value={String(field.value)}
                   onChange={(val) => field.onChange(Number(val))}
-                  options={categories?.map(c => ({ label: c.name, value: String(c.id) })) || []}
+                  options={collections?.map(c => ({ label: c.name, value: String(c.id) })) || []}
                   placeholder="اختر القسم"
                 />
               )}

@@ -19,6 +19,9 @@ export const EditProductPage: React.FC = () => {
   });
 
   const handleSubmit = async (data: ProductFormValues) => {
+    console.log(data);
+    
+
     await update_product(data, {
       onSuccess: () => {
         navigate('/products');
@@ -26,6 +29,7 @@ export const EditProductPage: React.FC = () => {
       },
 
       onError(error) {
+        
         console.error("Update Failed:", error)
         notify.error(error.response.data.error.message)
       },

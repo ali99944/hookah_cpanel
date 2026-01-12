@@ -26,15 +26,15 @@ export const DashboardPage: React.FC = () => {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 h-full">
-           {metrics?.revenueTrend && <RevenueChart data={metrics.revenueTrend} />}
+           {metrics?.revenue_per_day && <RevenueChart data={metrics.revenue_per_day} />}
         </div>
 
         <div className="lg:col-span-1 h-full">
           {metrics && (
             <OrderStatusChart 
-              delivered={metrics.ordersByStatus.delivered}
-              processing={metrics.ordersByStatus.processing}
-              cancelled={metrics.ordersByStatus.cancelled}
+              delivered={metrics.order_by_status.delivered}
+              processing={metrics.order_by_status.processing}
+              cancelled={metrics.order_by_status.cancelled}
             />
           )}
         </div>

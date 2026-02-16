@@ -1,113 +1,132 @@
-// src/features/dashboard/components/recent_orders.tsx
 import React from 'react';
-import { FileText, Truck, Ban } from 'lucide-react';
-import type { ColumnDef } from '../../../components/ui/datatable';
+import { FileText, Layers, Truck, Ban } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
+import DataTable, { type ColumnDef } from '../../../components/ui/datatable';
 import { TableAction, TableActions } from '../../../components/ui/table-actions';
-import DataTable from '../../../components/ui/datatable';
-
-interface OrderRow {
-  id: string;
-  customerName: string;
-  items: string; // e.g., "3x Mint Flavor"
-  date: string;
-  amount: number;
-  status: 'delivered' | 'processing' | 'cancelled';
-}
-
-const mockData: OrderRow[] = [
-  { id: 'ORD-5501', customerName: 'محمد أحمد', items: '2x نكهة تفاحتين, 1x فحم', date: '2026-01-02 10:00 ص', amount: 450, status: 'delivered' },
-  { id: 'ORD-5502', customerName: 'خالد عمر', items: '1x شيشة خليل مأمون', date: '2026-01-02 11:30 ص', amount: 1200, status: 'processing' },
-  { id: 'ORD-5503', customerName: 'سارة علي', items: '5x نكهة نعناع', date: '2026-01-02 02:00 م', amount: 350, status: 'cancelled' },
-  { id: 'ORD-5504', customerName: 'مطعم السرايا', items: 'طلب جملة #402', date: '2026-01-02 04:00 م', amount: 5000, status: 'delivered' },
-];
+import { useNotification } from '../../../core/hooks/use-notification';
+import { OrderStatusBadge } from '../../orders/components/order_status_badge';
+import { useOrders, useUpdateOrder } from '../../orders/hooks/use-orders';
+import type { Order } from '../../orders/types';
 
 export const RecentOrders: React.FC = () => {
-  
-  const columns: ColumnDef<OrderRow>[] = [
-    { 
-      header: 'رقم الطلب', 
-      accessorKey: 'id', 
-      className: 'font-mono text-xs text-text-muted text-right' // Right align for Arabic
+  const navigate = useNavigate();
+  const { notify } = useNotification();
+  const [page, setPage] = React.useState(1);
+
+  const { data: ordersResponse, isLoading } = useOrders({ limit: 5, page });
+
+  const updateOrderMutation = useUpdateOrder(
+    () => notify.success('تم تحديث حالة الطلب'),
+    (error: any) => notify.error(error?.response?.data?.message || 'تعذر تحديث حالة الطلب')
+  );
+
+  const orders = ordersResponse?.data || [];
+  const meta = ordersResponse?.meta;
+
+  const columns: ColumnDef<Order>[] = [
+    {
+      header: 'رقم الطلب',
+      className: 'font-mono text-xs text-text-muted',
+      cell: (item) => <span className="font-bold">#{item.id}</span>,
     },
-    { 
-      header: 'العميل', 
-      accessorKey: 'customerName', 
-      className: 'font-medium text-text-primary text-right' 
+    {
+      header: 'العميل',
+      className: 'font-medium text-text-primary',
+      cell: (item) => (
+        <div className="flex flex-col">
+          <span>{item.customer_name}</span>
+          <span className="text-xs text-text-muted">{item.customer_phone}</span>
+        </div>
+      ),
     },
-    { 
-      header: 'تفاصيل الطلب', 
-      accessorKey: 'items',
-      className: 'text-sm text-text-muted text-right truncate max-w-[200px]'
-    },
-    { 
-      header: 'التاريخ', 
-      accessorKey: 'date', 
-      className: 'text-xs text-text-muted text-right' 
-    },
-    { 
-      header: 'الحالة', 
+    {
+      header: 'تفاصيل الطلب',
+      className: 'text-sm text-text-muted max-w-[240px]',
       cell: (item) => {
-        const styles = {
-          delivered: 'bg-emerald-50 text-emerald-700 border border-emerald-100',
-          processing: 'bg-amber-50 text-amber-700 border border-amber-100',
-          cancelled: 'bg-destructive/10 text-destructive border border-destructive/20',
-        };
-        const labels = {
-          delivered: 'تم التوصيل',
-          processing: 'قيد التجهيز',
-          cancelled: 'ملغي'
-        };
-        return (
-          <span className={`px-2 py-0.5 text-[10px] font-bold tracking-wide rounded-none ${styles[item.status]}`}>
-            {labels[item.status]}
-          </span>
-        );
-      }
+        const items = item.items || [];
+        const firstItem = items[0]?.product_name;
+        if (items.length === 0) return <span>-</span>;
+        if (items.length === 1) return <span>{firstItem}</span>;
+        return <span>{firstItem} + {items.length - 1} منتجات</span>;
+      },
     },
-    { 
-      header: 'المبلغ', 
-      cell: (item) => <span className="font-mono text-text-primary font-bold">{item.amount} ج.م</span>, 
-      align: 'left' // In RTL, numbers often look better aligned left (end of cell)
+    {
+      header: 'التاريخ',
+      className: 'text-xs text-text-muted',
+      cell: (item) => <span>{new Date(item.created_at).toLocaleDateString('ar-EG')}</span>,
+    },
+    {
+      header: 'الحالة',
+      cell: (item) => <OrderStatusBadge status={item.status} />,
+    },
+    {
+      header: 'المبلغ',
+      align: 'left',
+      cell: (item) => <span className="font-mono text-text-primary font-bold">{Number(item.total).toFixed(2)} ج.م</span>,
     },
     {
       header: 'إجراءات',
-      align: 'left', // Actions at the end
+      align: 'left',
       cell: (item) => (
         <TableActions>
-          <TableAction 
-            icon={FileText} 
-            label="تفاصيل الطلب" 
-            onClick={() => console.log('View', item.id)} 
+          <TableAction
+            icon={FileText}
+            label="تفاصيل الطلب"
+            onClick={() => navigate(`/orders/${item.id}`)}
           />
-          
           {item.status === 'processing' && (
-            <TableAction 
-              icon={Truck} 
-              label="تأكيد الشحن" 
+            <TableAction
+              icon={Truck}
+              label="تحويل إلى تم الشحن"
               variant="success"
-              onClick={() => console.log('Ship', item.id)} 
+              disabled={updateOrderMutation.isPending}
+              onClick={() => updateOrderMutation.mutate({
+                id: item.id,
+                payload: { status: 'shipped' },
+              })}
             />
           )}
-
           {item.status !== 'cancelled' && item.status !== 'delivered' && (
-            <TableAction 
-              icon={Ban} 
-              label="إلغاء الطلب" 
+            <TableAction
+              icon={Ban}
+              label="إلغاء الطلب"
               variant="destructive"
-              onClick={() => console.log('Cancel', item.id)} 
+              disabled={updateOrderMutation.isPending}
+              onClick={() => updateOrderMutation.mutate({
+                id: item.id,
+                payload: { status: 'cancelled' },
+              })}
             />
           )}
         </TableActions>
-      )
-    }
+      ),
+    },
   ];
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] border-2 border-dashed border-border bg-secondary/5 rounded-none">
+        <div className="w-16 h-16 bg-white border border-border flex items-center justify-center mb-4 text-text-muted">
+          <Layers size={32} />
+        </div>
+        <h3 className="text-lg font-bold text-text-primary">جاري التحميل...</h3>
+        <p className="text-sm text-text-muted mt-1">يتم تحميل أحدث الطلبات...</p>
+      </div>
+    );
+  }
 
   return (
     <DataTable
       title="أحدث الطلبات"
       description="قائمة بآخر العمليات التي تمت على المتجر."
-      data={mockData}
+      data={orders}
       columns={columns}
+      pagination={{
+        currentPage: meta?.current_page || page,
+        totalPages: meta?.last_page || 1,
+        onPageChange: setPage,
+      }}
     />
   );
 };

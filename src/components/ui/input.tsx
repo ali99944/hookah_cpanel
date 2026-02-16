@@ -43,7 +43,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               ${icon ? 'pl-10' : 'pl-4'}
               ${rightIcon ? 'pr-10' : 'pr-4'}
               
-              py-2
+              py-1.5
               ${error 
                 ? 'border-2 border-destructive focus:border-destructive focus:outline-none' 
                 : 'border-secondary/20 hover:border-secondary/30 focus:border-secondary focus:ring-0'}

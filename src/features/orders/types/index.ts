@@ -7,6 +7,7 @@ export interface OrderItem {
   quantity: number;
   price: string | number;
   cover_image: string | null;
+  line_total?: number;
 }
 
 export interface Order {
@@ -16,15 +17,21 @@ export interface Order {
   // Financials
   subtotal: string | number;
   shipping_cost: string | number;
+  fees_cost?: string | number;
   total: string | number;
   
   // Status
   status: OrderStatus;
+  is_paid?: boolean;
+  tracking_code?: string | null;
   tracking_number: string | null;
   
   // Customer Info
   customer_name: string;
   customer_phone: string;
+  address?: string;
+  city?: string;
+  notes?: string | null;
   customer_address: string;
   customer_city: string;
   customer_email: string | null;
@@ -39,15 +46,37 @@ export interface Order {
 export interface OrderResponse {
   data: Order[];
   meta?: {
-    total: number;
-    page: number;
+    current_page: number;
     last_page: number;
+    total: number;
+    per_page: number;
   };
 }
 
 export interface OrderFilters {
+  limit?: number;
+  page?: number;
   status?: string;
   search?: string; // Search by name or order ID
   date_from?: string;
   date_to?: string;
+}
+
+export interface OrderUpdateItemPayload {
+  id: number;
+  quantity: number;
+  price: number;
+}
+
+export interface OrderUpdatePayload {
+  status?: OrderStatus;
+  tracking_number?: string;
+  is_paid?: boolean;
+  customer_name?: string;
+  customer_phone?: string;
+  customer_email?: string;
+  address?: string;
+  city?: string;
+  notes?: string;
+  items?: OrderUpdateItemPayload[];
 }

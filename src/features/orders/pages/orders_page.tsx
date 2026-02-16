@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
+
 import { OrdersList } from '../components/orders_list';
-import { type OrderFilters } from '../types';
 import { useOrders } from '../hooks/use-orders';
-// Add filters component here if needed, keeping it simple for now
+import { type OrderFilters } from '../types';
 
 export const OrdersPage: React.FC = () => {
-  const [filters] = useState<OrderFilters>({});
-  const { data, isLoading } = useOrders(filters);
+  const [page, setPage] = useState(1);
+  const [filters] = useState<OrderFilters>({ limit: 10 });
+  const { data, isLoading } = useOrders({ ...filters, page });
+
+  const currentPage = data?.meta?.current_page ?? page;
+  const totalPages = data?.meta?.last_page ?? 1;
 
   return (
     <div className="space-y-6 pb-20" dir="rtl">
@@ -14,12 +18,13 @@ export const OrdersPage: React.FC = () => {
         <h1 className="text-2xl font-bold text-text-primary tracking-tight font-cairo">الطلبات</h1>
         <p className="text-sm text-text-muted">متابعة المبيعات وعمليات الشحن.</p>
       </div>
-      
-      {/* Future: <OrderFiltersBar ... /> */}
-      
-      <OrdersList 
-        data={data?.data || []} 
-        isLoading={isLoading} 
+
+      <OrdersList
+        data={data?.data || []}
+        isLoading={isLoading}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setPage}
       />
     </div>
   );

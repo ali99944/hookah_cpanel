@@ -60,7 +60,7 @@ const router = createBrowserRouter([
         element: <LoginPage />
       }
     ]
-  }
+  },
 ])
 
 export default router;

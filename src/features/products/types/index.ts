@@ -1,6 +1,6 @@
 import { type Category } from "../../categories/types";
 
-export type ProductStatus = 'active' | 'inactive' | 'draft';
+export type ProductStatus = 'active' | 'inactive';
 
 export interface ProductAttribute {
   key: string;
@@ -15,24 +15,26 @@ export interface ProductFeature {
 export interface ProductGalleryImage {
   id: number;
   url: string;
+  source?: string;
 }
 
 export interface Product {
   id: number;
   category_id: number;
+  collection_id?: number;
   name: string;
-  slug: string;
   description: string | null;
   price: number;
-  stock: number;
   status: ProductStatus;
-  cover_image: string; // URL
-  gallery_images: ProductGalleryImage[]; // Relation from backend
+  cover_image: string | null;
+  gallery: ProductGalleryImage[];
+  gallery_images?: ProductGalleryImage[];
   attributes: ProductAttribute[];
   features: ProductFeature[];
   created_at: string;
   updated_at: string;
 
+  collection?: Category;
   category?: Category;
 }
 

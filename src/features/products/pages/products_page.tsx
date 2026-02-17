@@ -14,9 +14,9 @@ export const ProductsPage: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-text-primary tracking-tight font-cairo">المنتجات</h1>
-          <p className="text-sm text-text-muted">مخزون النكهات والشيش والإكسسوارات.</p>
+          <p className="text-sm text-text-muted">إدارة النكهات والشيش والإكسسوارات.</p>
         </div>
-        <Button 
+        <Button
           onClick={() => navigate('/products/create')}
           leftIcon={<Plus size={16} />}
           className="font-bold"
@@ -25,10 +25,7 @@ export const ProductsPage: React.FC = () => {
         </Button>
       </div>
 
-      <ProductsList 
-        data={data?.data || []} 
-        isLoading={isLoading} 
-      />
+      <ProductsList data={data?.data || []} isLoading={isLoading} />
     </div>
   );
 };

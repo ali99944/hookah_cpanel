@@ -20,82 +20,73 @@ export const ProductsList: React.FC<ProductsListProps> = ({ data, isLoading }) =
   const deleteMutation = useDeleteProduct(Number(deletingId), () => setDeletingId(null));
 
   const columns: ColumnDef<Product>[] = [
-    { 
-      header: 'صورة', 
+    {
+      header: 'صورة',
       cell: (item) => (
         <div className="w-12 h-12 bg-white border border-border p-0.5">
-          <img 
-            src={getStorageLink(item.cover_image) as string} 
-            alt={item.name} 
-            className="w-full h-full object-cover" 
+          <img
+            src={getStorageLink(item.cover_image || '') as string}
+            alt={item.name}
+            className="w-full h-full object-cover"
             onError={(e) => (e.currentTarget.src = 'https://via.placeholder.com/40')}
           />
         </div>
-      )
+      ),
     },
-    { 
-      header: 'اسم المنتج', 
-      accessorKey: 'name', 
-      className: 'font-medium text-text-primary'
+    {
+      header: 'اسم المنتج',
+      accessorKey: 'name',
+      className: 'font-medium text-text-primary',
     },
-    { 
-      header: 'القسم', 
-      accessorKey: 'category', // Assuming nested object via React Table accessor logic or render
-      cell: (item) => <span className="text-sm text-primary underline">{item.category?.name || '-'}</span>
-    },
-    { 
-      header: 'السعر', 
-      cell: (item) => <span className="font-mono font-bold">{item.price} ج.م</span>
-    },
-    { 
-      header: 'المخزون', 
+    {
+      header: 'القسم',
       cell: (item) => (
-        <span className={`text-xs font-bold ${item.stock < 5 ? 'text-destructive' : 'text-text-muted'}`}>
-          {item.stock} قطعة
+        <span className="text-sm text-primary underline">
+          {item.collection?.name || item.category?.name || '-'}
         </span>
-      )
+      ),
     },
-    { 
-      header: 'الحالة', 
+    {
+      header: 'السعر',
+      cell: (item) => <span className="font-mono font-bold">{item.price} ج.م</span>,
+    },
+    {
+      header: 'الحالة',
       cell: (item) => {
-         const statusMap = {
-            active: 'نشط',
-            inactive: 'غير نشط',
-            draft: 'مسودة',
-         };
+        const statusKey = item.status === 'active' ? 'active' : 'inactive';
 
-         const styles = {
-            active: 'bg-success/10 text-success',
-            inactive: 'bg-destructive/10 text-destructive border-destructive/20',
-            draft: 'bg-neutral-50 text-text-muted border-border',
-         };
-         
-         return (
-            <span className={`px-2 py-0.5 text-[10px] font-bold rounded-none ${styles[item.status]}`}>
-              {statusMap[item.status]}
-            </span>
-         );
-      }
+        const statusMap = {
+          active: 'نشط',
+          inactive: 'غير نشط',
+        } as const;
+
+        const styles = {
+          active: 'bg-success/10 text-success',
+          inactive: 'bg-destructive/10 text-destructive',
+        } as const;
+
+        return (
+          <span className={`px-2 py-0.5 text-[10px] font-bold rounded-none ${styles[statusKey]}`}>
+            {statusMap[statusKey]}
+          </span>
+        );
+      },
     },
     {
       header: 'إجراءات',
       align: 'left',
       cell: (item) => (
         <TableActions>
-          <TableAction 
-            icon={Edit} 
-            label="تعديل" 
-            onClick={() => navigate(`/products/edit/${item.id}`)} 
-          />
-          <TableAction 
-            icon={Trash2} 
-            label="حذف" 
+          <TableAction icon={Edit} label="تعديل" onClick={() => navigate(`/products/edit/${item.id}`)} />
+          <TableAction
+            icon={Trash2}
+            label="حذف"
             variant="destructive"
-            onClick={() => setDeletingId(item.id)} 
+            onClick={() => setDeletingId(item.id)}
           />
         </TableActions>
-      )
-    }
+      ),
+    },
   ];
 
   return (
@@ -108,8 +99,8 @@ export const ProductsList: React.FC<ProductsListProps> = ({ data, isLoading }) =
         isLoading={isLoading}
         pagination={{ currentPage: 1, totalPages: 1, onPageChange: () => {} }}
       />
-      
-      <DangerDialog 
+
+      <DangerDialog
         isOpen={!!deletingId}
         onClose={() => setDeletingId(null)}
         onConfirm={() => deletingId && deleteMutation.mutate(deletingId)}

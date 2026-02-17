@@ -1,9 +1,9 @@
-import type { Product, ProductResponse } from '../types';
+import type { Product } from '../types';
 import { useGetQuery, useMutationAction } from '../../../core/hooks/queries-actions';
 
 // --- READ ---
 export const useProducts = () => {
-  return useGetQuery<ProductResponse>({
+  return useGetQuery<Product[]>({
     key: ['products'],
     url: '/products',
   });

@@ -7,7 +7,7 @@ import { useProducts } from '../hooks/use-products';
 
 export const ProductsPage: React.FC = () => {
   const navigate = useNavigate();
-  const { data, isLoading } = useProducts();
+  const { data = [], isLoading } = useProducts();
 
   return (
     <div className="space-y-6 pb-20" dir="rtl">
@@ -25,7 +25,7 @@ export const ProductsPage: React.FC = () => {
         </Button>
       </div>
 
-      <ProductsList data={data?.data || []} isLoading={isLoading} />
+      <ProductsList data={data || []} isLoading={isLoading} />
     </div>
   );
 };
